@@ -400,7 +400,11 @@ function createBot() {
         sendDiscordWebhook(`Connected to \`${config.server.ip}\``, 0x4ade80);
       }
 
-      const mcData = require('minecraft-data')(bot.version);
+      const dataVersion = config.server.version || bot.version;
+      const mcData = require('minecraft-data')(dataVersion);
+      if (!mcData) {
+        throw new Error(`No minecraft-data found for server version: ${dataVersion}`);
+      }
       const defaultMove = new Movements(bot, mcData);
       defaultMove.allowFreeMotion = false;
       defaultMove.canDig = false;
